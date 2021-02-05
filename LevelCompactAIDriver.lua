@@ -883,10 +883,15 @@ function LevelCompactAIDriver:updateShieldHeight()
 		--	local upperAlpha = MathUtil.clamp((upperDistanceToGround - upperDistanceToGround) / (lowerDistanceToGround - upperDistanceToGround), 0, 1)
       	-- 	local lowerAlpha = MathUtil.clamp((lowerDistanceToGround - upperDistanceToGround) / (lowerDistanceToGround - upperDistanceToGround), 0, 1)
 
-			local nextAlpha = spec.heightTargetAlpha - heightDiff
+			local nextAlpha = spec.lastHeightAlpha - heightDiff
 			nextAlpha = MathUtil.clamp(nextAlpha,jointDesc.lowerDistanceToGround,jointDesc.upperDistanceToGround)
-			self:debug("curAlpha: %.2f, nextAlpha: %.2f, heightDiff: %.2f, terrainHeight: %.2f, shieldHeight: %.2f, targetHeight: %.2f",spec.heightTargetAlpha,nextAlpha,heightDiff,terrainHeight,y,targetHeight)
-			spec.heightTargetAlpha = nextAlpha
+			self:debug("curAlpha: %.2f, nextAlpha: %.2f, heightDiff: %.2f, terrainHeight: %.2f, shieldHeight: %.2f, targetHeight: %.2f",spec.lastHeightAlpha,nextAlpha,heightDiff,terrainHeight,y,targetHeight)
+			if math.abs(spec.lastHeightAlpha - nextAlpha) >0.05 then 
+				spec.heightTargetAlpha = nextAlpha
+			else
+				spec.heightTargetAlpha =-1
+			end
+			
 			--rotate shield to standing on ground position, should roughly be 90 degree to ground
 		--	local angle = spec.maxTiltAngle
 			jointDesc.upperRotationOffset = jointDesc.upperRotationOffsetBackup 
