@@ -210,9 +210,12 @@ function BaleLoaderAIDriver:raycastCallback(hitObjectId, x, y, z, distance, nx, 
 	if hitObjectId ~= 0 then
 		local object = g_currentMission:getNodeObject(hitObjectId)
 		if object and object:isa(Bale) then
-			if distance < 2 then
+			-- round bales have diameter, others height, thanks Giants!
+			local baleHeight = object.baleDiameter and object.baleDiameter or
+				(object.baleHeight and object.baleHeight or 0.8)
+			if distance < (baleHeight + 1.2) then
 				self.tooCloseToOtherBales = true
-				self:debugSparse('Bale found at d=%.1f', distance)
+				self:debugSparse('Bale found at d=%.1f, bale height %.1f', distance, baleHeight)
 			else
 				self.tooCloseToOtherBales = false
 			end
